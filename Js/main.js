@@ -142,6 +142,7 @@ Oct_8.CreateObjectFactory(()=>{
      document.getElementsByTagName("nav")[0].style.display = "none"
     let Card = Oct_8.CreateContainerElement("card","document","div","div")
     let Calculo = CalculoBaseCarta()
+    let Efeitos = `Este card tem efeitos ${Calculo.agro_qtd} de agro, ${Calculo.tempo_qtd} de tempo, ${Calculo.control_qtd} de controle e ${Calculo.combo_qtd} de combo`
     Oct_8.ModifyContentContainer(Card,`
     <div class="card">
         <h1>Card</h1>
@@ -149,7 +150,7 @@ Oct_8.CreateObjectFactory(()=>{
         <div class="card-content">
             <label>Nome da Carta</label>
             <input type="text" id="cardName" placeholder="Nome da Carta" />
-            <textarea id="cardDescription" placeholder="Descrição da Carta"></textarea>
+            <textarea id="cardDescription" > ${Efeitos} </textarea>
             <br><label>Combate</label>
             <br><input type="number" id="cardCombate" value="${Math.round(Calculo.agro/10)}" />
             <br><label>Área de Controle</label>
@@ -229,15 +230,20 @@ createTimeline();
 
 function CalculoBaseCarta(){
     let agro = 0;
+    let agro_qtd = 0;
     let tempo = 0;
+    let tempo_qtd = 0;
     let control = 0;
+    let control_qtd = 0;
     let combo = 0;
+    let combo_qtd = 0;
 
     document.querySelectorAll(".agro").forEach((e)=>{
         agro += CalculateBase.Agro.Combate
         let constRect = e.getBoundingClientRect();
         agro+= Math.round(CalculateBase.Agro.Combate+ constRect.left-constRect.top)
         tempo-= agro
+        agro_qtd+=1
     })
 
     document.querySelectorAll(".tempo").forEach((e)=>{
@@ -245,6 +251,7 @@ function CalculoBaseCarta(){
          let constRect = e.getBoundingClientRect();
          tempo+= Math.round(CalculateBase.Tempo.Compra+ constRect.left-constRect.top)
          control -= tempo
+         tempo_qtd+=1
     })
 
     document.querySelectorAll(".control").forEach((e)=>{
@@ -252,6 +259,7 @@ function CalculoBaseCarta(){
          let constRect = e.getBoundingClientRect();
         control+= Math.round(CalculateBase.Control.Area+ constRect.left-constRect.top)
         agro -= control
+        control_qtd+=1
     })
 
     document.querySelectorAll(".combo").forEach((e)=>{
@@ -259,6 +267,7 @@ function CalculoBaseCarta(){
          let constRect = e.getBoundingClientRect();
         combo+= Math.round(CalculateBase.Combo.Procura+ constRect.left-constRect.top)
         control -= combo
+        combo_qtd+=1
 
     })
      agro = Math.round(agro /  GameConfiguration.CombateBase-GameConfiguration.PontosIniciais)
@@ -266,5 +275,5 @@ function CalculoBaseCarta(){
      control = Math.round(control /  GameConfiguration.Area - GameConfiguration.Jogadores)
      combo = Math.round(combo /  GameConfiguration.Procura - GameConfiguration.CartasDeck)
 
-    return {agro,tempo,control,combo}   
+    return {agro,tempo,control,combo,agro_qtd,tempo_qtd,control_qtd,combo_qtd}   
 }
