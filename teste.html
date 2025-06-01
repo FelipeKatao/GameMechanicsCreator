@@ -1,0 +1,69 @@
+!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Arrastar Objeto</title>
+  <style>
+    .container {
+      width: 500px;
+      height: 300px;
+      border: 2px solid #333;
+      position: relative;
+      background: #f0f0f0;
+    }
+
+    .draggable {
+      width: 100px;
+      height: 100px;
+      background: #3498db;
+      position: absolute;
+      cursor: grab;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="draggable"></div>
+</div>
+
+<script>
+  const draggable = document.querySelector('.draggable');
+  const container = document.querySelector('.container');
+
+  let offsetX = 0;
+  let offsetY = 0;
+  let isDragging = false;
+
+  draggable.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    const rect = draggable.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    draggable.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      const containerRect = container.getBoundingClientRect();
+      let x = e.clientX - containerRect.left - offsetX;
+      let y = e.clientY - containerRect.top - offsetY;
+
+      // Limites para não sair da div
+      x = Math.max(0, Math.min(x, container.offsetWidth - draggable.offsetWidth));
+      y = Math.max(0, Math.min(y, container.offsetHeight - draggable.offsetHeight));
+
+      draggable.style.left = `${x}px`;
+      draggable.style.top = `${y}px`;
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    draggable.style.cursor = 'grab';
+  });
+</script>
+
+</body>
+</html>
