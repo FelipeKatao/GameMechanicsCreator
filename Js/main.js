@@ -1,7 +1,8 @@
 import {Oct8} from './Oct8/Oct8.js';
 var Oct_8 = new Oct8()
 var Remove_flag = false
-
+var Modificar = false
+var Obj_modify =  null
 
 var GameConfiguration = {
     CombateBase : 1,
@@ -30,12 +31,12 @@ Oct_8.createNewTag("combo",()=>{return "<div class=' pill combo'>combo</div>"})
 Oct_8.createNewTag("energia",()=>{return "<div class=' pill energia'>energia</div>"})
 
 
-Oct_8.ReactiveTags(document.getElementById("document"))
+Oct_8.ReactiveTags(document.getElementById("document"),true)
 
 // Criação do menu 
 //#region Menu
 document.getElementById("NewAgro").addEventListener("click", (e) => {
-    document.getElementById("document").innerHTML += `<agro class="note" draggable="true"></agro>`
+    document.getElementById("document").innerHTML += `<agro class="note" draggable="true" style=''></agro>`
     Oct_8.createNewTag("agro",()=>{return "<div class='pill agro'>Agro </div>"})
     Oct_8.ReactiveTags(document.getElementById("document"))
     createTimeline()
@@ -58,7 +59,7 @@ document.getElementById("NewTempo").addEventListener("click", (e) => {
 
 document.getElementById("NewCombo").addEventListener("click", (e) => {
     document.getElementById("document").innerHTML += `<combo class="note"  draggable="true"></combo>`
-    Oct_8.createNewTag("combo",()=>{return "<div class=' pill combo'>combo</div>"})
+    Oct_8.createNewTag("combo",()=>{return "<div class=' pill combo' style='width: 20vh;'>combo</div>"})
     Oct_8.ReactiveTags(document.getElementById("document"))
     createTimeline()
 })
@@ -79,6 +80,8 @@ document.getElementById("exec").addEventListener("click", (e) => {
 })
 
 document.getElementById("remove").addEventListener("click", (e) => {
+    Modificar = false
+     document.getElementById("modificar").innerText = "Modificar Mecanica"
     if(Remove_flag == false)
     {
         Remove_flag = true
@@ -90,6 +93,23 @@ document.getElementById("remove").addEventListener("click", (e) => {
         document.getElementById("remove").innerText = "Remover Mecanica"
     }
 })
+
+document.getElementById("modificar").addEventListener("click", (e) => {
+    Remove_flag = false
+    document.getElementById("remove").innerText = "Remover Mecanica"
+    if(Modificar == true)
+        {
+            Modificar = false
+            document.getElementById("screenModify").remove()
+            document.getElementById("modificar").innerText = "Modificar Modificação"
+        }
+    else{
+            Modificar = true
+            Oct_8.AppendObjectFacyotyTo("screenModify",null)
+            document.getElementById("modificar").innerText = "Parar Mecanica"
+        }
+})
+
 
 
 
@@ -161,6 +181,59 @@ Oct_8.CreateObjectFactory(()=>{
 },"setup")
 
 Oct_8.CreateObjectFactory(()=>{
+    let Valor_tela = ""
+    if(Obj_modify != null)
+    {
+        let InitialValue = String(Obj_modify.getElementsByClassName("pill")[0].style.width).replace("vh","")
+        console.log(Obj_modify.getElementsByClassName("pill")[0].style)
+        Valor_tela = `<div class='modify_canva'>
+        
+        <div>
+            <label for="tamanho">Poder Mecanica</label>
+            <input type='range' id='tamanho' min='20' max='200' value=${InitialValue}>
+        </div>
+
+        <div>
+         <label for="cor">Cor da Mecanica</label>
+        <input type = 'color' id='color_picker_qs' value=${"#"+Obj_modify.getElementsByClassName("pill")[0].style.backgroundColor}>    
+        </div>
+       
+        <div>
+         <label for="cor">texto Lembrete</label>
+        <input type = 'text' id='text_sqs' value=${"#"+Obj_modify.getElementsByClassName("pill")[0].innerText}>    
+        </div>
+        
+        <label>
+    </div>`
+    }
+    else
+    {
+        Valor_tela = "Seelcione um objeto Primerio"
+    }
+    let ModifySetups = Oct_8.CreateContainerElement("screenModify","document","div","div")
+    Oct_8.ModifyPropsDefault(ModifySetups,null,null,null,null)
+    Oct_8.ModifyContentContainer(ModifySetups,`
+        ${Valor_tela}
+        `)
+    if(Obj_modify != null)
+    {
+        document.getElementById("tamanho").addEventListener('change',()=>{
+            Obj_modify.getElementsByClassName("pill")[0].style.width = document.getElementById("tamanho").value+"vh"
+        })
+
+        document.getElementById("color_picker_qs").addEventListener('change',()=>{
+            Obj_modify.getElementsByClassName("pill")[0].style.backgroundColor = document.getElementById("color_picker_qs").value
+        })
+
+        document.getElementById("text_sqs").addEventListener('change',()=>{
+            Obj_modify.getElementsByClassName("pill")[0].innerText = document.getElementById("text_sqs").value
+        })
+
+
+    }
+},"screenModify")
+
+Oct_8.CreateObjectFactory(()=>{
      document.getElementsByTagName("nav")[0].style.display = "none"
     let Card = Oct_8.CreateContainerElement("card","document","div","div")
     let Calculo = CalculoBaseCarta()
@@ -215,6 +288,17 @@ function createTimeline() {
       if(Remove_flag  == true)
       {
         draggable.remove()
+      }
+
+      if(Modificar == true)
+      {
+         Obj_modify = draggable
+         document.getElementById("screenModify").remove()
+         Oct_8.AppendObjectFacyotyTo("screenModify",null)
+      }
+      else
+      {
+        Modificar = false
       }
       const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
       const clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
@@ -276,32 +360,32 @@ function CalculoBaseCarta(){
     let Energia =0
 
     document.querySelectorAll(".agro").forEach((e)=>{
-        agro += CalculateBase.Agro.Combate
         let constRect = e.getBoundingClientRect();
+        agro += CalculateBase.Agro.Combate+constRect.width
         agro+= Math.round(CalculateBase.Agro.Combate+ constRect.left-constRect.top)
         tempo-= agro
         agro_qtd+=1
     })
 
     document.querySelectorAll(".tempo").forEach((e)=>{
-         tempo += CalculateBase.Tempo.Compra
-         let constRect = e.getBoundingClientRect();
+        let constRect = e.getBoundingClientRect();
+         tempo += CalculateBase.Tempo.Compra+constRect.width
          tempo+= Math.round(CalculateBase.Tempo.Compra+ constRect.left-constRect.top)
          control -= tempo
          tempo_qtd+=1
     })
 
     document.querySelectorAll(".control").forEach((e)=>{
-        control += CalculateBase.Control.Area
-         let constRect = e.getBoundingClientRect();
+        let constRect = e.getBoundingClientRect();
+        control += CalculateBase.Control.Area+constRect.width
         control+= Math.round(CalculateBase.Control.Area+ constRect.left-constRect.top)
         agro -= control
         control_qtd+=1
     })
 
     document.querySelectorAll(".combo").forEach((e)=>{
-        combo += CalculateBase.Combo.Procura
-         let constRect = e.getBoundingClientRect();
+        let constRect = e.getBoundingClientRect();
+        combo += CalculateBase.Combo.Procura+constRect.width
         combo+= Math.round(CalculateBase.Combo.Procura+ constRect.left-constRect.top)
         control -= combo
         combo_qtd+=1
@@ -310,7 +394,7 @@ function CalculoBaseCarta(){
 
     document.querySelectorAll(".energia").forEach((e)=>{
          let constRect = e.getBoundingClientRect();
-        Energia+= Math.round(CalculateBase.Combo.Procura+ constRect.left-constRect.top)
+        Energia+= Math.round(CalculateBase.Combo.Procura+constRect.width+ constRect.left-constRect.top)
         agro= agro-Energia;
         tempo=tempo-Energia
         control=control-Energia;
