@@ -178,53 +178,61 @@ function RenderTela(){
 }
 
 function createTimeline() {
+  const draggables = document.querySelectorAll('.agro, .tempo, .control, .combo , .note');
 
-const draggables = document.querySelectorAll('.agro, .tempo, .control, .combo , .note');
+  draggables.forEach(draggable => {
+    let offsetX = 0;
+    let offsetY = 0;
+    let isDragging = false;
 
+    const startDrag = (e) => {
+      isDragging = true;
+      const rect = draggable.getBoundingClientRect();
 
+      const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+      const clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
 
-draggables.forEach(draggable => {
-  let offsetX = 0;
-  let offsetY = 0;
-  let isDragging = false;
-
-  draggable.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    const rect = draggable.getBoundingClientRect();
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
-    draggable.style.cursor = 'grabbing';
-
-    const moveHandler = (e) => {
-      if (isDragging) {
-        const container = document.getElementById("document");
-        const containerRect = container.getBoundingClientRect();
-
-        let x = e.clientX - containerRect.left - offsetX;
-        let y = e.clientY - containerRect.top - offsetY;
-
-        // Limites
-        x = Math.max(0, Math.min(x, container.offsetWidth - draggable.offsetWidth));
-        y = Math.max(0, Math.min(y, container.offsetHeight - draggable.offsetHeight));
-
-        draggable.style.left = `${x}px`;
-        draggable.style.top = `${y}px`;
-        draggable.style.position = 'absolute'; // importante!
-      }
+      offsetX = clientX - rect.left;
+      offsetY = clientY - rect.top;
+      draggable.style.cursor = 'grabbing';
     };
 
-    const upHandler = () => {
+    const moveDrag = (e) => {
+      if (!isDragging) return;
+
+      const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+      const clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
+
+      const container = document.getElementById("document");
+      const containerRect = container.getBoundingClientRect();
+
+      let x = clientX - containerRect.left - offsetX;
+      let y = clientY - containerRect.top - offsetY;
+
+      // Limites
+      x = Math.max(0, Math.min(x, container.offsetWidth - draggable.offsetWidth));
+      y = Math.max(0, Math.min(y, container.offsetHeight - draggable.offsetHeight));
+
+      draggable.style.left = `${x}px`;
+      draggable.style.top = `${y}px`;
+      draggable.style.position = 'absolute';
+    };
+
+    const endDrag = () => {
       isDragging = false;
       draggable.style.cursor = 'grab';
-      document.removeEventListener('mousemove', moveHandler);
-      document.removeEventListener('mouseup', upHandler);
     };
 
-    document.addEventListener('mousemove', moveHandler);
-    document.addEventListener('mouseup', upHandler);
+    draggable.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', moveDrag);
+    document.addEventListener('mouseup', endDrag);
+
+    draggable.addEventListener('touchstart', startDrag, { passive: false });
+    document.addEventListener('touchmove', moveDrag, { passive: false });
+    document.addEventListener('touchend', endDrag);
   });
-});
 }
+
 
 createTimeline();
 

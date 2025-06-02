@@ -127,9 +127,11 @@ nav ul li{
     padding: 2vh;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border: 1vh solid #ccc;
+    overflow: auto;
 }
 
 #cardDescription{
+    overflow: auto;
     height: 30vh;
     width: 100%;
 }
@@ -143,3 +145,4 @@ nav ul li{
     cursor: pointer;    
     margin-left: 4vh;;
 }
+
