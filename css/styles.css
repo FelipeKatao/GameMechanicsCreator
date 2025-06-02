@@ -1,17 +1,32 @@
 .tempo{
     background-color: rgb(101, 155, 0);
+    -webkit-text-stroke: 0.1vh white;
 }
 
 .agro{
     background-color: red;
     position: absolute;
+    -webkit-text-stroke: 0.1vh white;
+}
+.energia{
+    background-color: white;
+    -webkit-text-stroke: 0.1vh black;
+}
+.agro.expandido {
+    width: 200px;
 }
 .control{
     background-color: rgb(0, 114, 190);
+    -webkit-text-stroke: 0.1vh white;
 }
 
 .combo{
     background-color: rgb(255, 166, 0);
+    -webkit-text-stroke: 0.1vh white;
+}
+
+body{
+    overflow: hidden;
 }
 
 #container {
@@ -28,7 +43,7 @@
     font-size: 4vh;
     font-family:Arial, Helvetica, sans-serif;
     color: transparent; /* Deixa o preenchimento invisível */
-    -webkit-text-stroke: 0.1vh white;
+    
     font-weight: bold;
     border-radius: 1.7vh;position: absolute;
 }
@@ -94,7 +109,7 @@
 nav{
     position: fixed;
     margin-top: -20vh;
-    background-color: #832466;
+    background-color: #755a6d;
     color: white;
     width: 100%;
     display: flex;
@@ -145,4 +160,36 @@ nav ul li{
     cursor: pointer;    
     margin-left: 4vh;;
 }
+.navigate{
+    position: absolute;
+ list-style: none;
+    color: white;
+    width: 100%;
+    display: flex;
+}
+.navigate li:first-child{
+    margin-left: -9vh;
+}
+.navigate li{
+    margin-top: -4vh;
+    z-index: 0;
+    width: 20vh;;
+    background-color: #832466;
+    height: 90vh;
+    float: left;
+    list-style: none;
+    opacity: 0.4;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
 
+.navigate li:hover{
+    z-index: 0;
+    width: 20vh;;
+    background-color: #832466;
+    height: 90vh;
+    float: left;
+    list-style: none;
+    opacity: 0.7;
+    
+}

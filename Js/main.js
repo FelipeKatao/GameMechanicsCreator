@@ -26,6 +26,7 @@ Oct_8.createNewTag("agro",()=>{return "<div class='pill agro'>Agro </div>"})
 Oct_8.createNewTag("tempo",()=>{return "<div class=' pill tempo'>tempo</div>"})
 Oct_8.createNewTag("control",()=>{return "<div class=' pill control'>control</div>"})
 Oct_8.createNewTag("combo",()=>{return "<div class=' pill combo'>combo</div>"})
+Oct_8.createNewTag("energia",()=>{return "<div class=' pill energia'>energia</div>"})
 
 
 Oct_8.ReactiveTags(document.getElementById("document"))
@@ -57,6 +58,13 @@ document.getElementById("NewTempo").addEventListener("click", (e) => {
 document.getElementById("NewCombo").addEventListener("click", (e) => {
     document.getElementById("document").innerHTML += `<combo class="note"  draggable="true"></combo>`
     Oct_8.createNewTag("combo",()=>{return "<div class=' pill combo'>combo</div>"})
+    Oct_8.ReactiveTags(document.getElementById("document"))
+    createTimeline()
+})
+
+document.getElementById("NewCusto").addEventListener("click", (e) => {
+    document.getElementById("document").innerHTML += `<energia class="note"  draggable="true"></energia>`
+    Oct_8.createNewTag("energia",()=>{return "<div class=' pill energia'>energia</div>"})
     Oct_8.ReactiveTags(document.getElementById("document"))
     createTimeline()
 })
@@ -143,9 +151,11 @@ Oct_8.CreateObjectFactory(()=>{
     let Card = Oct_8.CreateContainerElement("card","document","div","div")
     let Calculo = CalculoBaseCarta()
     let Efeitos = `Este card tem efeitos ${Calculo.agro_qtd} de agro, ${Calculo.tempo_qtd} de tempo, ${Calculo.control_qtd} de controle e ${Calculo.combo_qtd} de combo`
+    let avisos = " "
     Oct_8.ModifyContentContainer(Card,`
     <div class="card">
         <h1>Card</h1>
+        <h2>${avisos}</h2>
         <button class="close" id="closeCard">X</button>
         <div class="card-content">
             <label>Nome da Carta</label>
@@ -226,6 +236,7 @@ function createTimeline() {
     draggable.addEventListener('mousedown', startDrag);
     document.addEventListener('mousemove', moveDrag);
     document.addEventListener('mouseup', endDrag);
+    
 
     draggable.addEventListener('touchstart', startDrag, { passive: false });
     document.addEventListener('touchmove', moveDrag, { passive: false });
@@ -245,6 +256,7 @@ function CalculoBaseCarta(){
     let control_qtd = 0;
     let combo = 0;
     let combo_qtd = 0;
+    let Energia =0
 
     document.querySelectorAll(".agro").forEach((e)=>{
         agro += CalculateBase.Agro.Combate
@@ -277,6 +289,15 @@ function CalculoBaseCarta(){
         control -= combo
         combo_qtd+=1
 
+    })
+
+    document.querySelectorAll(".energia").forEach((e)=>{
+         let constRect = e.getBoundingClientRect();
+        Energia+= Math.round(CalculateBase.Combo.Procura+ constRect.left-constRect.top)
+        agro= agro-Energia;
+        tempo=tempo-Energia
+        control=control-Energia;
+        combo=combo-Energia
     })
      agro = Math.round(agro /  GameConfiguration.CombateBase-GameConfiguration.PontosIniciais)
      tempo = Math.round(tempo /  GameConfiguration.Compra - GameConfiguration.Turnos)
