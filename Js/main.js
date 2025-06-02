@@ -24,7 +24,7 @@ var CalculateBase = {
     Combo: {Combate:0,Compra:0,Area:-1,Procura:1}
 }
 
-Oct_8.createNewTag("agro",()=>{return "<div class='pill agro'>Agro </div>"})
+
 Oct_8.createNewTag("tempo",()=>{return "<div class=' pill tempo'>tempo</div>"})
 Oct_8.createNewTag("control",()=>{return "<div class=' pill control'>control</div>"})
 Oct_8.createNewTag("combo",()=>{return "<div class=' pill combo'>combo</div>"})
@@ -36,38 +36,46 @@ Oct_8.ReactiveTags(document.getElementById("document"),true)
 // Criação do menu 
 //#region Menu
 document.getElementById("NewAgro").addEventListener("click", (e) => {
-    document.getElementById("document").innerHTML += `<agro class="note" draggable="true" style=''></agro>`
-    Oct_8.createNewTag("agro",()=>{return "<div class='pill agro'>Agro </div>"})
-    Oct_8.ReactiveTags(document.getElementById("document"))
+   // document.getElementById("document").innerHTML += `<agro class="note" draggable="true" style=''></agro>`
+    document.getElementById("document").innerHTML+= `
+    <agro class="note" draggable="true" style="cursor: grab;"><div class="pill agro">Agro </div></agro>
+    `
     createTimeline()
 })
 
 document.getElementById("Newcontrol").addEventListener("click", (e) => {
-    document.getElementById("document").innerHTML += `<control class="note"  draggable="true"></control>`
-    Oct_8.createNewTag("control",()=>{return "<div class=' pill control'>control</div>"})
-    Oct_8.ReactiveTags(document.getElementById("document"))
+    //document.getElementById("document").innerHTML += `<control class="note"  draggable="true"></control>`
+    document.getElementById("document").innerHTML+= `
+<control class="note" draggable="true" style="cursor: grab;"><div class=" pill control">control</div></control>    `
+   // Oct_8.ReactiveTags(document.getElementById("document"))
     createTimeline()
 })
 
 
 document.getElementById("NewTempo").addEventListener("click", (e) => {
-    document.getElementById("document").innerHTML += `<tempo class="note"  draggable="true"></tempo>`
-    Oct_8.createNewTag("tempo",()=>{return "<div class=' pill tempo'>tempo</div>"})
-    Oct_8.ReactiveTags(document.getElementById("document"))
+    document.getElementById("document").innerHTML+= `
+    <tempo class="note"  draggable="true">
+    <div class=' pill tempo'>tempo</div>
+    </tempo>
+    `
     createTimeline()
 })
 
 document.getElementById("NewCombo").addEventListener("click", (e) => {
-    document.getElementById("document").innerHTML += `<combo class="note"  draggable="true"></combo>`
-    Oct_8.createNewTag("combo",()=>{return "<div class=' pill combo' style='width: 20vh;'>combo</div>"})
-    Oct_8.ReactiveTags(document.getElementById("document"))
+    document.getElementById("document").innerHTML+= `
+    <combo class="note"  draggable="true">
+        <div class=' pill combo' style='width: 20vh;'>combo</div>
+    </combo>
+    `
     createTimeline()
 })
 
 document.getElementById("NewCusto").addEventListener("click", (e) => {
-    document.getElementById("document").innerHTML += `<energia class="note"  draggable="true"></energia>`
-    Oct_8.createNewTag("energia",()=>{return "<div class=' pill energia'>energia</div>"})
-    Oct_8.ReactiveTags(document.getElementById("document"))
+     document.getElementById("document").innerHTML+= `
+     <energia class="note"  draggable="true">
+        <div class=' pill energia'>energia</div>
+     </energia>
+     `
     createTimeline()
 })
 
@@ -275,7 +283,7 @@ function RenderTela(){
 }
 
 function createTimeline() {
-  const draggables = document.querySelectorAll('.agro, .tempo, .control, .combo , .note');
+  const draggables = document.querySelectorAll(' .note');
 
   draggables.forEach(draggable => {
     let offsetX = 0;
