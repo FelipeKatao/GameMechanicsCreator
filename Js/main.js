@@ -1,5 +1,6 @@
 import {Oct8} from './Oct8/Oct8.js';
 var Oct_8 = new Oct8()
+var Remove_flag = false
 
 
 var GameConfiguration = {
@@ -75,6 +76,19 @@ document.getElementById("SetupJog").addEventListener("click", (e) => {
 
 document.getElementById("exec").addEventListener("click", (e) => {
     RenderCard()
+})
+
+document.getElementById("remove").addEventListener("click", (e) => {
+    if(Remove_flag == false)
+    {
+        Remove_flag = true
+        document.getElementById("remove").innerText = "Parar Remoção"
+    }
+    else
+    {
+        Remove_flag = false
+        document.getElementById("remove").innerText = "Remover Mecanica"
+    }
 })
 
 
@@ -198,10 +212,13 @@ function createTimeline() {
     const startDrag = (e) => {
       isDragging = true;
       const rect = draggable.getBoundingClientRect();
-
+      if(Remove_flag  == true)
+      {
+        draggable.remove()
+      }
       const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
       const clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
-
+        
       offsetX = clientX - rect.left;
       offsetY = clientY - rect.top;
       draggable.style.cursor = 'grabbing';
